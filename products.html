@@ -1,0 +1,1357 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweet Delights - Product Catalog</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>tailwind.config = { theme: { extend: { colors: { primary: '#ff6b6b', secondary: '#4ecdc4' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50" id="home">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo and Mobile Menu Button -->
+      <div class="flex items-center">
+        <a href="#" class="text-3xl font-['Pacifico'] text-primary mr-4 md:mr-8">Sweet Delight</a>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-600">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-menu-line ri-lg"></i>
+          </div>
+        </button>
+      </div>
+
+      <!-- Main Navigation (Desktop) -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="home.html" class="text-gray-800 font-medium hover:text-primary transition-colors">Home</a>
+        <a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+        <a href="products.html" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+        <a href="order.html" class="text-gray-600 hover:text-primary transition-colors">Custom Orders</a>
+        <a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+        <a href="dashboard.html" class="text-gray-600 hover:text-primary transition-colors">Dashboard</a>
+      </nav>
+
+      <!-- Right Side Icons -->
+      <div class="flex items-center space-x-4">
+        <!-- Search (Mobile Trigger) -->
+        <button id="mobile-search-button" class="md:hidden text-gray-600 hover:text-primary transition-colors">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-search-line ri-lg"></i>
+          </div>
+        </button>
+
+        <!-- Search (Desktop) -->
+        <div class="hidden md:block relative">
+          <input type="text" placeholder="Search products..."
+            class="w-40 lg:w-64 px-4 py-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+          <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="relative" id="shopping-cart">
+  <button class="text-gray-600 hover:text-primary transition-colors" id="cart-button">
+    <div class="w-8 h-8 flex items-center justify-center">
+      <i class="ri-shopping-cart-line ri-lg"></i>
+      <span id="cart-count"
+        class="absolute -top-1 -right-1 bg-primary text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
+    </div>
+  </button>
+
+  <!-- Cart Dropdown -->
+  <div id="cart-dropdown" class="hidden absolute right-0 mt-2 w-[32rem] bg-white rounded-lg shadow-lg z-50">
+    <div class="p-4">
+
+      <!-- Empty Cart -->
+      <div id="cart-empty" class="text-center py-8">
+        <div class="w-16 h-16 mx-auto mb-4 text-gray-400">
+          <i class="ri-shopping-cart-line ri-3x"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
+        <p class="text-gray-600 mb-4">Add some delicious items to your cart</p>
+        <a href="products.html">
+          <button
+            class="px-6 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+            Shop Now
+          </button>
+        </a>
+      </div>
+
+      <!-- Filled Cart -->
+      <div id="cart-items" class="hidden">
+        <div class="flex flex-col md:flex-row gap-4 max-h-80 overflow-y-auto">
+
+          <!-- Cart Section -->
+          <div class="border-r pr-2 w-full md:w-2/3">
+            <h4 class="font-semibold mb-2">Cart Items</h4>
+            <div id="cart-products-list" class="space-y-4"></div>
+          </div>
+
+          <!-- Filter Output Section -->
+          <div class="pl-2 w-full md:w-1/3">
+            <h4 class="font-semibold mb-2">Customized Order</h4>
+            <div id="cart-filters-output" class="text-sm space-y-1 text-gray-700"></div>
+          </div>
+        </div>
+
+        <!-- Subtotal & Button -->
+        <div class="border-t border-gray-200 mt-4 pt-4">
+          <div class="flex justify-between text-gray-900 font-semibold mb-4">
+            <span>Subtotal:</span>
+            <span id="cart-subtotal">$0.00</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button
+              class="w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 !rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap"
+              onclick="closeCart()">Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+        <!-- Sign In (Desktop) -->
+        <button id="signInButton"
+          class="hidden md:inline-flex items-center px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+          <span>Login In</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="container mx-auto px-4 py-3">
+        <nav class="flex flex-col space-y-4">
+          <a href="#home" class="text-gray-800 font-medium hover:text-primary transition-colors">Home</a>
+          <a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+          <a href="products.html" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+          <a href="order.html" class="text-gray-600 hover:text-primary transition-colors">Custom Orders</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          <a href="dashboard.html" class="text-gray-600 hover:text-primary transition-colors">Dashboard</a>
+          <button
+            class="w-full text-left px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+            Sign In
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Mobile Search -->
+    <div id="mobile-search" class="hidden md:hidden bg-white border-t border-gray-200 px-4 py-3">
+      <div class="relative">
+        <input type="text" placeholder="Search products..."
+          class="w-full px-4 py-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <i class="ri-search-line"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign In Modal -->
+    <div id="signInModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+      <div class="bg-white rounded-lg w-full max-w-md p-6 relative mx-4">
+        <button id="closeSignInModal" class="absolute right-4 top-4 text-gray-500 hover:text-gray-700">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-close-line ri-lg"></i>
+          </div>
+        </button>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Login In</h2>
+        <form id="signInForm">
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+            <input type="email" id="signInEmail" placeholder="Enter your Email"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              required>
+          </div>
+          <div class="mb-6">
+            <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+            <input type="password" id="signInPassword" placeholder="Enter your Password"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              required>
+          </div>
+          <button type="submit"
+            class="w-full px-6 py-3 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap mb-4">Login
+            In</button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <!-- Breadcrumb -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4 py-3">
+      <nav class="flex">
+        <ol class="flex items-center space-x-2 text-sm">
+          <li>
+            <a href="#" class="text-gray-500 hover:text-primary">Home</a>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-400 mx-1">/</span>
+            <span class="text-gray-900 font-medium">Products</span>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <marquee class="mt-2 text-red-500 text-2xl font-bold">These prices are at <strong>30%</strong>&nbsp;Discount for
+    limited time.</marquee>
+  <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
+    <!-- Sidebar Filters (Mobile Toggle) -->
+    <div class="md:hidden mb-4">
+      <button id="mobile-filter-toggle"
+        class="w-full flex items-center justify-between px-4 py-3 bg-white rounded-lg shadow-sm">
+        <span class="font-medium text-gray-900">Filters</span>
+        <div class="w-5 h-5 flex items-center justify-center">
+          <i class="ri-filter-3-line"></i>
+        </div>
+      </button>
+    </div>
+    <!-- Sidebar Filters -->
+    <div id="filters-sidebar" class="md:block hidden md:w-64 flex-shrink-0 mb-6 md:mb-0 md:mr-6">
+      <div class="bg-white rounded-lg shadow-sm p-4 sticky top-24">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Cutomized Order</h3>
+          <button id="clear-filters" class="text-sm text-primary hover:underline">Clear All</button>
+        </div>
+        <!-- Occasions Filter -->
+        <div class="filter-section mb-6">
+          <div class="flex justify-between items-center mb-3 cursor-pointer filter-header">
+            <h4 class="font-medium text-gray-900">Occasions</h4>
+            <div class="w-5 h-5 flex items-center justify-center text-gray-500 filter-icon transition-transform">
+              <!-- <i class="ri-arrow-down-s-line"></i> -->
+            </div>
+          </div>
+          <div class="filter-content space-y-2">
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="occasion" value="birthday">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Birthday</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="occasion" value="wedding">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Wedding</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="occasion" value="anniversary">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Anniversary </span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="occasion" value="graduation">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Graduation</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="occasion" value="corporate">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Corporate</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-section mb-6">
+          <div class="flex justify-between items-center mb-3 cursor-pointer filter-header">
+            <h4 class="font-medium text-gray-900">Flavors</h4>
+            <div class="w-5 h-5 flex items-center justify-center text-gray-500 filter-icon transition-transform">
+              <!-- <i class="ri-arrow-down-s-line"></i> -->
+            </div>
+          </div>
+          <div class="filter-content space-y-2">
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="flavor" value="chocolate">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Chocolate</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="flavor" value="vanilla">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Vanilla</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="flavor" value="redVelvet">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Red Velvet</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="flavor" value="strawberry">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Strawberry</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="flavor" value="lemon">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Lemon</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="flavor" value="carrot">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Carrot</span>
+            </label>
+          </div>
+        </div>
+        <!-- Dietary Restrictions Filter -->
+        <div class="filter-section mb-6">
+          <div class="flex justify-between items-center mb-3 cursor-pointer filter-header">
+            <h4 class="font-medium text-gray-900">Dietary Restrictions</h4>
+            <div class="w-5 h-5 flex items-center justify-center text-gray-500 filter-icon transition-transform">
+              <!-- <i class="ri-arrow-down-s-line"></i> -->
+            </div>
+          </div>
+          <div class="filter-content space-y-2">
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="dietary" value="glutenFree">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Gluten-Free</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="dietary" value="dairyFree">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Dairy-Free</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="dietary" value="vegan">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Vegan</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="dietary" value="nutFree">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Nut-Free</span>
+            </label>
+            <label class="custom-checkbox flex items-center">
+              <input type="checkbox" name="dietary" value="sugarFree">
+              <span class="checkmark"></span>
+              <span class="ml-7 text-gray-700">Sugar-Free</span>
+            </label>
+          </div>
+        </div>
+        <!-- Price Range Filter -->
+        <div class="filter-section mb-6">
+          <div class="flex justify-between items-center mb-3 cursor-pointer filter-header">
+            <h4 class="font-medium text-gray-900">Price Range</h4>
+            <div class="w-5 h-5 flex items-center justify-center text-gray-500 filter-icon transition-transform">
+              <!-- <i class="ri-arrow-down-s-line"></i> -->
+            </div>
+          </div>
+          <div class="filter-content">
+            <div class="slider-container mb-4">
+              <input type="range" id="price-range" min="10" max="200" value="100" class="custom-range">
+              <div class="flex justify-between text-sm text-gray-500 mt-1">
+                <span>$10</span>
+                <span>$200</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                <input type="number" id="min-price" value="10"
+                  class="w-full pl-8 pr-2 py-2 border border-gray-300 rounded text-sm">
+              </div>
+              <span class="mx-2 text-gray-500">-</span>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                <input type="number" id="max-price" value="100"
+                  class="w-full pl-8 pr-2 py-2 border border-gray-300 rounded text-sm">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button onclick="filter()"
+          class="w-full px-4 py-3 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+          Order
+        </button>
+      </div>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1">
+      <!-- Sort and View Options -->
+      <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div class="mb-4 md:mb-0">
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">All Cakes</h1>
+            <p class="text-gray-600">Showing the Popular Cake itemsof unique flavor for specific occasions </p>
+          </div>
+
+        </div>
+      </div>
+      <!-- Product Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Product 1 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Chocolate-delight.jpg" alt="Chocolate Delight Cake"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Chocolate Delight')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-half-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(42)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Chocolate Delight</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Rich chocolate layers with ganache and fresh berries.
+              Perfect for chocolate lovers.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$42.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Chocolate Delight', 42.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 2 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Strawberry-bliss.jpg" alt="Strawberry Bliss Cake"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Strawberry Bliss')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-line"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(36)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Strawberry Bliss</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Vanilla sponge with fresh strawberries and cream. Light
+              and refreshing.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$38.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Strawberry Bliss', 38.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 3 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Red-velvet.jpg" alt="Red Velvet Dream Cake"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Red Velvet Dream')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(51)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Red Velvet Dream</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Classic red velvet with cream cheese frosting. Rich and
+              velvety texture.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$45.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Red Velvet Dream', 45.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 4 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Weeding-cakes.jpg" alt="Elegant Wedding Cake"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Elegant Wedding Cake')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-half-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(28)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Elegant Wedding Cake</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Three-tier vanilla cake with buttercream frosting and
+              edible flowers. Perfect for weddings.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$189.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Elegant Wedding Cake', 189.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 5 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Carrot-cake-delight.jpg" alt="Carrot Cake Delight"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 left-3">
+              <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">Gluten-Free</span>
+            </div>
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Carrot Cake Delight')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-line"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(32)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Carrot Cake Delight</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Moist carrot cake with cream cheese frosting. Made with
+              gluten-free flour.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$36.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Carrot Cake Delight', 36.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 6 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Rainbow-cake.jpg" alt="Rainbow Celebration"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Rainbow Celebration')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-half-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(45)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Rainbow Celebration</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Colorful rainbow layers with vanilla buttercream. Perfect
+              for children's birthdays.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$48.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Rainbow Celebration', 48.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 7 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Chocolate-mouse.jpg" alt="Chocolate Mousse Supreme"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Chocolate Mousse Supreme')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(56)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Chocolate Mousse Supreme</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Light chocolate mousse on a chocolate sponge base with
+              dark chocolate ganache.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$46.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Chocolate Mousse Supreme', 46.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 8 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Lemon-sunshine.jpg" alt="Lemon Sunshine"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 left-3">
+              <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">New</span>
+            </div>
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Lemon Sunshine')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-line"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(24)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Lemon Sunshine</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Zesty lemon cake with lemon curd filling and lemon
+              buttercream frosting.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$39.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Lemon Sunshine', 39.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 9 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Tiramisu-classico.jpg" alt="Tiramisu Classico"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Tiramisu Classico')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-half-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(38)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Tiramisu Classico</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Italian classic with coffee-soaked sponge, mascarpone
+              cream, and cocoa powder.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$44.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Tiramisu Classico', 44.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 10 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Fresh-fruit-tart.jpg" alt="Fresh Fruit Tart"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 left-3">
+              <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">Vegan</span>
+            </div>
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Fresh Fruit Tart')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-line"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(29)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Fresh Fruit Tart</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Vegan pastry shell filled with plant-based custard and
+              topped with fresh seasonal fruits.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$41.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Fresh Fruit Tart', 41.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 11 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/Black-Forest-Gateau.jpg" alt="Black Forest Gateau"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('Black Forest Gateau')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(47)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Black Forest Gateau</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Traditional German cake with chocolate sponge, cherries,
+              whipped cream, and chocolate shavings.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$47.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="addToCart('Black Forest Gateau', 47.99)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Product 12 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="images/New-York-cheese-cake.jpg" alt="New York Cheesecake"
+              class="w-full h-full object-cover object-top transition-transform group-hover:scale-105">
+            <div class="absolute top-3 right-3">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-500 hover:text-primary transition-colors">
+                <i class="ri-heart-line"></i>
+              </button>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button
+                class="px-4 py-2 bg-white text-gray-900 !rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap"
+                onclick="quickView('New York Cheesecake')">
+                Quick View
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center mb-2">
+              <div class="text-primary text-sm flex">
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-fill"></i>
+                <i class="ri-star-half-fill"></i>
+              </div>
+              <span class="text-gray-500 text-sm ml-1">(41)</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">New York Cheesecake</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">Classic creamy cheesecake with graham cracker crust,
+              topped with mixed berry compote.</p>
+            <div class="flex justify-between items-center">
+              <span class="text-primary font-semibold">$43.99</span>
+              <button
+                class="px-3 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap"
+                onclick="cart()">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- Quick View Modal -->
+  <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg w-full max-w-4xl p-6 relative max-h-[90vh] overflow-y-auto">
+      <button id="close-quick-view" class="absolute right-4 top-4 text-gray-500 hover:text-gray-700">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <i class="ri-close-line ri-lg"></i>
+        </div>
+      </button>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="overflow-hidden rounded-lg">
+          <img id="quick-view-image" src="" alt="Product Image" class="w-full h-auto object-cover">
+        </div>
+        <div>
+          <h2 id="quick-view-title" class="text-2xl font-bold text-gray-900 mb-2"></h2>
+          <div class="flex items-center mb-4">
+            <div class="text-primary text-sm flex">
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-half-fill"></i>
+            </div>
+            <span class="text-gray-500 text-sm ml-1">(42 reviews)</span>
+          </div>
+          <p id="quick-view-price" class="text-xl font-semibold text-primary mb-4"></p>
+          <p id="quick-view-description" class="text-gray-700 mb-6"></p>
+          <div class="mb-6">
+            <h3 class="font-medium text-gray-900 mb-2">Size</h3>
+            <ul>
+              <li>Small (6")</li>
+              <li>Medium (8")</li>
+              <li>Large (10")</li>
+
+            </ul>
+          </div>
+          <div class="mb-6" id="quick-view-quantity">
+            <h3 class="font-medium text-gray-900 mb-2">Status: Available</h3>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="flex items-center space-x-4 text-sm text-gray-600">
+              <div class="flex items-center">
+                <div class="w-5 h-5 mr-2 flex items-center justify-center text-primary">
+                  <i class="ri-truck-line"></i>
+                </div>
+                <span>Free delivery on orders over $100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+ <footer class="bg-gray-900 text-white py-12">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+<div>
+<a href="#" class="text-3xl font-['Pacifico'] text-white mb-4 block">Sweet Delight</a>
+<p class="text-gray-400 mb-6">Crafting delicious memories since 2010. Premium cakes for all your special occasions.</p>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-facebook-fill"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-instagram-line"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-twitter-x-line"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-pinterest-line"></i>
+</div>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+<ul class="space-y-2">
+<li><a href="home.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+<li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+<li><a href="products.html" class="text-gray-400 hover:text-white transition-colors">Products</a></li>
+<li><a href="order.html" class="text-gray-400 hover:text-white transition-colors">Custom Orders</a></li>
+<li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Our Products</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Birthday Cakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Wedding Cakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cupcakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Pastries</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Gluten-Free Options</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Opening Hours</h3>
+<ul class="space-y-2 text-gray-400">
+<li>Monday - Friday: 8:00 AM - 7:00 PM</li>
+<li>Saturday: 9:00 AM - 6:00 PM</li>
+<li>Sunday: 10:00 AM - 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 mb-4 md:mb-0">&copy; 2025 Sweet Delights. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<script id="sign-in">
+ // Sign In Modal Functionality
+  const signInButton = document.getElementById('signInButton');
+  const signInModal = document.getElementById('signInModal');
+  const closeSignInModal = document.getElementById('closeSignInModal');
+  
+  if (signInButton && signInModal) {
+    signInButton.addEventListener('click', function() {
+      signInModal.classList.remove('hidden');
+    });
+  }
+  
+  // Mobile menu sign in button
+  const mobileSignInButton = document.querySelector('#mobile-menu button');
+  if (mobileSignInButton && signInModal) {
+    mobileSignInButton.addEventListener('click', function() {
+      signInModal.classList.remove('hidden');
+      document.getElementById('mobile-menu').classList.add('hidden');
+    });
+  }
+
+  if (closeSignInModal && signInModal) {
+    closeSignInModal.addEventListener('click', function() {
+      signInModal.classList.add('hidden');
+    });
+
+    // Close modal when clicking outside
+    signInModal.addEventListener('click', function(e) {
+      if (e.target === signInModal) {
+        signInModal.classList.add('hidden');
+      }
+    });
+  }
+
+  // Form submission
+  const signInForm = document.getElementById('signInForm');
+  if (signInForm) {
+    signInForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Here you would typically handle the sign in logic
+      alert('Sign in functionality would be implemented here');
+      signInModal.classList.add('hidden');
+    });
+  }
+</script>
+  <script id="filter-script">
+    document.addEventListener('DOMContentLoaded', function () {
+      // Mobile filter toggle
+      const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+      const filtersSidebar = document.getElementById('filters-sidebar');
+      if (mobileFilterToggle && filtersSidebar) {
+        mobileFilterToggle.addEventListener('click', function () {
+          filtersSidebar.classList.toggle('hidden');
+        });
+      }
+      // Filter section toggle
+      const filterHeaders = document.querySelectorAll('.filter-header');
+      filterHeaders.forEach(header => {
+        header.addEventListener('click', function () {
+          const filterSection = this.closest('.filter-section');
+          filterSection.classList.toggle('collapsed');
+        });
+      });
+      // Price range slider
+      const priceRangeSlider = document.getElementById('price-range');
+      const minPriceInput = document.getElementById('min-price');
+      const maxPriceInput = document.getElementById('max-price');
+      if (priceRangeSlider && maxPriceInput) {
+        priceRangeSlider.addEventListener('input', function () {
+          maxPriceInput.value = this.value;
+        });
+        maxPriceInput.addEventListener('input', function () {
+          priceRangeSlider.value = this.value;
+        });
+      }
+      // Clear filters button
+      const clearFiltersBtn = document.getElementById('clear-filters');
+      if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function () {
+          const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+          checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+          });
+          if (priceRangeSlider && minPriceInput && maxPriceInput) {
+            priceRangeSlider.value = 100;
+            minPriceInput.value = 10;
+            maxPriceInput.value = 100;
+          }
+        });
+      }
+    });
+  </script>
+  <script id="product-script">
+    document.addEventListener('DOMContentLoaded', function () {
+      // Cart functionality
+      const cartButton = document.getElementById('cart-button');
+      const cartDropdown = document.getElementById('cart-dropdown');
+      const cartEmpty = document.getElementById('cart-empty');
+      const cartItems = document.getElementById('cart-items');
+      const cartItemsList = document.getElementById('cart-items-list');
+      const cartCount = document.getElementById('cart-count');
+      const cartSubtotal = document.getElementById('cart-subtotal');
+      let cart = [];
+      function updateCart() {
+        cartCount.textContent = cart.length;
+        if (cart.length === 0) {
+          cartEmpty.classList.remove('hidden');
+          cartItems.classList.add('hidden');
+        } else {
+          cartEmpty.classList.add('hidden');
+          cartItems.classList.remove('hidden');
+          renderCartItems();
+          updateSubtotal();
+        }
+      }
+      function renderCartItems() {
+        const cartProductsList = document.getElementById('cart-products-list');
+        if (!cartProductsList) return;
+
+        cartProductsList.innerHTML = cart.map((item, index) => `
+    <div class="flex items-center gap-4">
+      <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover object-top rounded">
+      <div class="flex-1">
+        <h4 class="text-gray-900 font-medium">${item.name}</h4>
+        <div class="flex items-center gap-2 mt-1">
+          <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-primary">
+            <i class="ri-subtract-line"></i>
+          </button>
+          <span class="text-gray-600">${item.quantity}</span>
+          <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-primary">
+            <i class="ri-add-line"></i>
+          </button>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-gray-900 font-medium">$${(item.price * item.quantity).toFixed(2)}</p>
+        <button onclick="removeItem(${index})" class="text-gray-500 hover:text-primary text-sm">Remove</button>
+      </div>
+    </div>
+  `).join('');
+      }
+
+      function updateSubtotal() {
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+      }
+      window.updateQuantity = function (index, change) {
+        if (cart[index].quantity + change > 0) {
+          cart[index].quantity += change;
+          updateCart();
+        }
+      };
+      window.removeItem = function (index) {
+        cart.splice(index, 1);
+        updateCart();
+      };
+      window.addToCart = function (name, price) {
+        // Find product image URL based on name
+        let imageUrl = '';
+        const products = document.querySelectorAll('.group');
+        for (let product of products) {
+          const productName = product.querySelector('h3').textContent;
+          if (productName === name) {
+            imageUrl = product.querySelector('img').src;
+            break;
+          }
+        }
+        // Check if product already in cart
+        const existingItemIndex = cart.findIndex(item => item.name === name);
+        if (existingItemIndex !== -1) {
+          cart[existingItemIndex].quantity += 1;
+        } else {
+          cart.push({
+            name: name,
+            price: price,
+            quantity: 1,
+            image: imageUrl
+          });
+        }
+        updateCart();
+        cartDropdown.classList.remove('hidden');
+        // Auto hide cart after 3 seconds
+        setTimeout(() => {
+          cartDropdown.classList.add('hidden');
+        }, 3000);
+      };
+      window.proceedToCheckout = function () {
+        console.log('Proceeding to checkout with items:', cart);
+        alert('Proceeding to checkout!');
+      };
+      window.closeCart = function () {
+        cartDropdown.classList.add('hidden');
+      };
+      if (cartButton) {
+        cartButton.addEventListener('click', function (e) {
+          e.preventDefault();
+          cartDropdown.classList.toggle('hidden');
+        });
+      }
+      document.addEventListener('click', function (e) {
+        if (cartButton && cartDropdown && !cartButton.contains(e.target) && !cartDropdown.contains(e.target)) {
+          cartDropdown.classList.add('hidden');
+        }
+      });
+      updateCart();
+      const quickViewModal = document.getElementById('quick-view-modal');
+      const closeQuickView = document.getElementById('close-quick-view');
+      const quickViewImage = document.getElementById('quick-view-image');
+      const quickViewTitle = document.getElementById('quick-view-title');
+      const quickViewDescription = document.getElementById('quick-view-description');
+
+      window.quickView = function (productName) {
+        const products = document.querySelectorAll('.group');
+        for (let product of products) {
+          const name = product.querySelector('h3').textContent;
+          if (name === productName) {
+            const image = product.querySelector('img').src;
+            const description = product.querySelector('p').textContent;
+            const rating = product.querySelector('.text-primary.text-sm').innerHTML;
+            const reviews = product.querySelector('.text-gray-500.text-sm').textContent;
+
+            quickViewImage.src = image;
+            quickViewImage.alt = name;
+            quickViewTitle.textContent = name;
+            quickViewDescription.textContent = description;
+
+            // Update rating and reviews inside modal
+            document.querySelector('#quick-view-modal .text-primary.text-sm').innerHTML = rating;
+            document.querySelector('#quick-view-modal .text-gray-500.text-sm').textContent = reviews;
+
+            quickViewModal.classList.remove('hidden');
+            quickViewModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            quickViewModal.animate([
+              { opacity: 0, transform: 'scale(0.95)' },
+              { opacity: 1, transform: 'scale(1)' }
+            ], {
+              duration: 200,
+              easing: 'ease-out'
+            });
+            break;
+          }
+        }
+      };
+
+      closeQuickView.addEventListener('click', () => {
+        quickViewModal.animate([
+          { opacity: 1, transform: 'scale(1)' },
+          { opacity: 0, transform: 'scale(0.95)' }
+        ], {
+          duration: 200,
+          easing: 'ease-out'
+        }).onfinish = () => {
+          quickViewModal.classList.add('hidden');
+          quickViewModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        };
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !quickViewModal.classList.contains('hidden')) {
+          closeQuickView.click();
+        }
+      });
+
+      if (quickViewModal) {
+        quickViewModal.addEventListener('click', (e) => {
+          if (e.target === quickViewModal) {
+            quickViewModal.classList.add('hidden');
+            quickViewModal.classList.remove('flex');
+            document.body.style.overflow = '';
+          }
+        });
+      }
+
+    });
+    //Filters
+    function filter() {
+      const selectedOccasions = document.querySelectorAll('input[name="occasion"]:checked');
+      const selectedFlavors = document.querySelectorAll('input[name="flavor"]:checked');
+      const selectedDietary = document.querySelectorAll('input[name="dietary"]:checked');
+      const maxPrice = document.getElementById('max-price').value;
+
+      const occasionsValues = Array.from(selectedOccasions).map(el => el.value);
+      const flavorsValues = Array.from(selectedFlavors).map(el => el.value);
+      const dietaryValues = Array.from(selectedDietary).map(el => el.value);
+
+      const filtersHTML = `
+    <p><strong>Occasions:</strong> ${occasionsValues.length ? occasionsValues.join(', ') : 'None'}</p>
+    <p><strong>Flavors:</strong> ${flavorsValues.length ? flavorsValues.join(', ') : 'None'}</p>
+    <p><strong>Dietary:</strong> ${dietaryValues.length ? dietaryValues.join(', ') : 'None'}</p>
+    <p><strong>Max Price:</strong> $${maxPrice}</p>
+  `;
+
+      document.getElementById('cart-filters-output').innerHTML = filtersHTML;
+
+      document.getElementById('cart-empty').classList.add('hidden');
+      document.getElementById('cart-items').classList.remove('hidden');
+      document.getElementById('cart-dropdown').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

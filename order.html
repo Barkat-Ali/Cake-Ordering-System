@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Delights - Premium Cake Shop</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#ff6b6b',secondary:'#4ecdc4'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body  class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-50" id="home">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo and Mobile Menu Button -->
+      <div class="flex items-center">
+        <a href="#" class="text-3xl font-['Pacifico'] text-primary mr-4 md:mr-8">Sweet Delight</a>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-600">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-menu-line ri-lg"></i>
+          </div>
+        </button>
+      </div>
+
+      <!-- Main Navigation (Desktop) -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="home.html" class="text-gray-800 font-medium hover:text-primary transition-colors">Home</a>
+        <a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+        <a href="products.html" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+        <a href="order.html" class="text-gray-600 hover:text-primary transition-colors">Custom Orders</a>
+        <a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+        <a href="dashboard.html" class="text-gray-600 hover:text-primary transition-colors">Dashboard</a>
+      </nav>
+
+      <!-- Right Side Icons -->
+      <div class="flex items-center space-x-4">
+        <!-- Search (Mobile Trigger) -->
+        <button id="mobile-search-button" class="md:hidden text-gray-600 hover:text-primary transition-colors">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-search-line ri-lg"></i>
+          </div>
+        </button>
+
+        <!-- Search (Desktop) -->
+        <div class="hidden md:block relative">
+          <input type="text" placeholder="Search products..."
+            class="w-40 lg:w-64 px-4 py-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+          <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="relative" id="shopping-cart">
+  <button class="text-gray-600 hover:text-primary transition-colors" id="cart-button">
+    <div class="w-8 h-8 flex items-center justify-center">
+      <i class="ri-shopping-cart-line ri-lg"></i>
+      <span id="cart-count"
+        class="absolute -top-1 -right-1 bg-primary text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
+    </div>
+  </button>
+
+  <!-- Cart Dropdown -->
+  <div id="cart-dropdown" class="hidden absolute right-0 mt-2 w-[32rem] bg-white rounded-lg shadow-lg z-50">
+    <div class="p-4">
+
+      <!-- Empty Cart -->
+      <div id="cart-empty" class="text-center py-8">
+        <div class="w-16 h-16 mx-auto mb-4 text-gray-400">
+          <i class="ri-shopping-cart-line ri-3x"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
+        <p class="text-gray-600 mb-4">Add some delicious items to your cart</p>
+        <a href="products.html">
+          <button
+            class="px-6 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+            Shop Now
+          </button>
+        </a>
+      </div>
+
+      <!-- Filled Cart -->
+      <div id="cart-items" class="hidden">
+        <div class="flex flex-col md:flex-row gap-4 max-h-80 overflow-y-auto">
+
+          <!-- Cart Section -->
+          <div class="border-r pr-2 w-full md:w-2/3">
+            <h4 class="font-semibold mb-2">Cart Items</h4>
+            <div id="cart-products-list" class="space-y-4"></div>
+          </div>
+
+          <!-- Filter Output Section -->
+          <div class="pl-2 w-full md:w-1/3">
+            <h4 class="font-semibold mb-2">Selected Filters</h4>
+            <div id="cart-filters-output" class="text-sm space-y-1 text-gray-700"></div>
+          </div>
+        </div>
+
+        <!-- Subtotal & Button -->
+        <div class="border-t border-gray-200 mt-4 pt-4">
+          <div class="flex justify-between text-gray-900 font-semibold mb-4">
+            <span>Subtotal:</span>
+            <span id="cart-subtotal">$0.00</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button
+              class="w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 !rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap"
+              onclick="closeCart()">Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+        <!-- Sign In (Desktop) -->
+        <button id="signInButton"
+          class="hidden md:inline-flex items-center px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+          <span>Login In</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="container mx-auto px-4 py-3">
+        <nav class="flex flex-col space-y-4">
+          <a href="#home" class="text-gray-800 font-medium hover:text-primary transition-colors">Home</a>
+          <a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+          <a href="products.html" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+          <a href="order.html" class="text-gray-600 hover:text-primary transition-colors">Custom Orders</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          <a href="dashboard.html" class="text-gray-600 hover:text-primary transition-colors">Dashboard</a>
+          <button
+            class="w-full text-left px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+            Login In
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Mobile Search -->
+    <div id="mobile-search" class="hidden md:hidden bg-white border-t border-gray-200 px-4 py-3">
+      <div class="relative">
+        <input type="text" placeholder="Search products..."
+          class="w-full px-4 py-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <i class="ri-search-line"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign In Modal -->
+     <div id="signInModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+      <div class="bg-white rounded-lg w-full max-w-md p-6 relative mx-4">
+        <button id="closeSignInModal" class="absolute right-4 top-4 text-gray-500 hover:text-gray-700">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-close-line ri-lg"></i>
+          </div>
+        </button>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Login In</h2>
+        <form id="signInForm">
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+            <input type="email" id="signInEmail" placeholder="Enter your Email"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              required>
+          </div>
+          <div class="mb-6">
+            <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+            <input type="password" id="signInPassword" placeholder="Enter your Password"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              required>
+          </div>
+          <button type="submit"
+            class="w-full px-6 py-3 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap mb-4">Login
+            In</button>
+        </form>
+      </div>
+    </div>
+  </header>
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-gray-200">
+<div class="container mx-auto px-4 py-3">
+<nav class="flex">
+<ol class="flex items-center space-x-2 text-sm">
+<li>
+<a href="#" class="text-gray-500 hover:text-primary">Home</a>
+</li>
+<li class="flex items-center">
+<span class="text-gray-400 mx-1">/</span>
+<span class="text-gray-900 font-medium">Custom Orders</span>
+</li>
+</ol>
+</nav>
+</div>
+</div>
+
+<!-- Custom Order Cake -->
+<main class="bg-gray-50 min-h-screen">
+<div class="max-w-7xl mx-auto px-4 py-12">
+<div class="text-center mb-16">
+<h1 class="text-4xl font-bold text-gray-800 mb-4">Custom Cake Orders</h1>
+<p class="text-lg text-gray-600 max-w-2xl mx-auto">Create your dream cake for any special occasion. Our expert bakers will bring your vision to life.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<div class="lg:col-span-2">
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Design Your Cake</h2>
+<form id="customOrderForm" action="" method="POST">
+<div class="space-y-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="occasion">Occasion</label>
+<select id="occasion" name="occasion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+<option value="">Select an occasion</option>
+<option value="birthday">Birthday</option>
+<option value="wedding">Wedding</option>
+<option value="anniversary">Anniversary</option>
+<option value="graduation">Graduation</option>
+<option value="other">Other</option>
+</select>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="size">Cake Size</label>
+<select id="size" name="size" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+<option value="">Select size</option>
+<option value="6inch">6" (serves 8-10)</option>
+<option value="8inch">8" (serves 12-15)</option>
+<option value="10inch">10" (serves 20-25)</option>
+<option value="12inch">12" (serves 30-35)</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="flavor">Cake Flavor</label>
+<select id="flavor" name="flavor" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+<option value="">Select flavor</option>
+<option value="vanilla">Classic Vanilla</option>
+<option value="chocolate">Rich Chocolate</option>
+<option value="redvelvet">Red Velvet</option>
+<option value="lemon">Lemon</option>
+<option value="carrot">Carrot</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="filling">Filling</label>
+<select id="filling" name="filling" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+<option value="">Select filling</option>
+<option value="buttercream">Vanilla Buttercream</option>
+<option value="chocolate">Chocolate Ganache</option>
+<option value="fruit">Fresh Fruit</option>
+<option value="cream">Whipped Cream</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="frosting">Frosting</label>
+<select id="frosting" name="frosting" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+<option value="">Select frosting</option>
+<option value="buttercream">Buttercream</option>
+<option value="fondant">Fondant</option>
+<option value="ganache">Ganache</option>
+<option value="naked">Naked Cake</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Decorations</label>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<label class="flex items-center">
+<input type="checkbox" name="decorations[]" value="flowers" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+<span class="ml-2 text-sm text-gray-700">Fresh Flowers</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" name="decorations[]" value="sprinkles" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+<span class="ml-2 text-sm text-gray-700">Sprinkles</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" name="decorations[]" value="topper" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+<span class="ml-2 text-sm text-gray-700">Cake Topper</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" name="decorations[]" value="fruit" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+<span class="ml-2 text-sm text-gray-700">Fresh Fruit</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" name="decorations[]" value="drip" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+<span class="ml-2 text-sm text-gray-700">Drip Design</span>
+</label>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="message">Special Instructions</label>
+<textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"></textarea>
+<div class="mt-2 text-sm text-gray-500 flex items-center justify-between">
+<span id="charCount">0/500 characters</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="date">Pickup Date</label>
+<input type="date" id="date" name="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" min="">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2" for="time">Pickup Time</label>
+<select id="time" name="time" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+<option value="">Select time</option>
+<option value="9:00">9:00 AM</option>
+<option value="10:00">10:00 AM</option>
+<option value="11:00">11:00 AM</option>
+<option value="12:00">12:00 PM</option>
+<option value="13:00">1:00 PM</option>
+<option value="14:00">2:00 PM</option>
+<option value="15:00">3:00 PM</option>
+<option value="16:00">4:00 PM</option>
+</select>
+</div>
+</div>
+<button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200">Place Order</button>
+</div>
+</form>
+</div>
+</div>
+<div class="lg:col-span-1">
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 sticky top-6">
+<h3 class="text-xl font-bold text-gray-800 mb-6">Order Summary</h3>
+<div class="space-y-4 mb-6">
+<div class="flex justify-between text-sm">
+<span class="text-gray-600">Base Price:</span>
+<span class="font-medium text-gray-800" id="basePrice">$0.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-600">Size:</span>
+<span class="font-medium text-gray-800" id="sizePrice">$0.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-gray-600">Decorations:</span>
+<span class="font-medium text-gray-800" id="decorationsPrice">$0.00</span>
+</div>
+<div class="border-t border-gray-100 pt-4">
+<div class="flex justify-between">
+<span class="font-medium text-gray-800">Total:</span>
+<span class="font-bold text-gray-800" id="totalPrice">$0.00</span>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg mb-6">
+<h4 class="font-medium text-gray-800 mb-2">Important Notes:</h4>
+<ul class="text-sm text-gray-600 space-y-2">
+<li class="flex items-start">
+<i class="ri-time-line mt-1 mr-2 text-primary"></i>
+<span>Please place orders at least 48 hours in advance</span>
+</li>
+<li class="flex items-start">
+<i class="ri-shield-check-line mt-1 mr-2 text-primary"></i>
+<span>50% deposit required for orders over $100</span>
+</li>
+<li class="flex items-start">
+<i class="ri-information-line mt-1 mr-2 text-primary"></i>
+<span>Custom design fees may apply</span>
+</li>
+</ul>
+</div>
+<div class="text-center">
+<p class="text-sm text-gray-600 mb-4">Need help with your order?</p>
+<button class="text-primary text-sm font-medium hover:underline">Contact our cake specialists</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
+<div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-cake-3-line text-primary ri-lg"></i>
+</div>
+<h3 class="font-medium text-gray-800 mb-2">Custom Design</h3>
+<p class="text-sm text-gray-600">Create unique cakes tailored to your vision</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
+<div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-heart-3-line text-primary ri-lg"></i>
+</div>
+<h3 class="font-medium text-gray-800 mb-2">Quality Ingredients</h3>
+<p class="text-sm text-gray-600">Premium ingredients for the perfect taste</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
+<div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-time-line text-primary ri-lg"></i>
+</div>
+<h3 class="font-medium text-gray-800 mb-2">On-Time Delivery</h3>
+<p class="text-sm text-gray-600">Guaranteed fresh and on-time delivery</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
+<div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="ri-customer-service-2-line text-primary ri-lg"></i>
+</div>
+<h3 class="font-medium text-gray-800 mb-2">Expert Support</h3>
+<p class="text-sm text-gray-600">Professional guidance throughout</p>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+<div class="p-8 text-center">
+<h2 class="text-2xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
+<p class="text-gray-600 mb-8">Find answers to common questions about our custom cake orders</p>
+</div>
+<div class="divide-y divide-gray-100">
+<div class="p-6">
+<button class="w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFAQ(this)">
+<span class="font-medium text-gray-800">How far in advance should I place my order?</span>
+<i class="ri-arrow-down-s-line text-gray-400"></i>
+</button>
+<div class="mt-4 hidden">
+<p class="text-gray-600">We recommend placing your order at least 48 hours in advance. For wedding cakes or large custom orders, we suggest booking 2-4 weeks ahead to ensure availability.</p>
+</div>
+</div>
+<div class="p-6">
+<button class="w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFAQ(this)">
+<span class="font-medium text-gray-800">Do you offer delivery services?</span>
+<i class="ri-arrow-down-s-line text-gray-400"></i>
+</button>
+<div class="mt-4 hidden">
+<p class="text-gray-600">Yes, we offer delivery within a 20-mile radius of our store. Delivery fees vary based on distance and order size. Please contact us for specific delivery quotes.</p>
+</div>
+</div>
+<div class="p-6">
+<button class="w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFAQ(this)">
+<span class="font-medium text-gray-800">Can you accommodate dietary restrictions?</span>
+<i class="ri-arrow-down-s-line text-gray-400"></i>
+</button>
+<div class="mt-4 hidden">
+<p class="text-gray-600">Yes, we can create cakes for various dietary needs including gluten-free, dairy-free, and vegan options. Please specify your requirements when placing the order.</p>
+</div>
+</div>
+<div class="p-6">
+<button class="w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFAQ(this)">
+<span class="font-medium text-gray-800">What is your cancellation policy?</span>
+<i class="ri-arrow-down-s-line text-gray-400"></i>
+</button>
+<div class="mt-4 hidden">
+<p class="text-gray-600">Orders can be cancelled up to 48 hours before the pickup time for a full refund. Cancellations within 48 hours may be subject to a 50% cancellation fee.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+<div>
+<a href="#" class="text-3xl font-['Pacifico'] text-white mb-4 block">Sweet Delight</a>
+<p class="text-gray-400 mb-6">Crafting delicious memories since 2010. Premium cakes for all your special occasions.</p>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-facebook-fill"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-instagram-line"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-twitter-x-line"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-pinterest-line"></i>
+</div>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+<ul class="space-y-2">
+<li><a href="home.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+<li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+<li><a href="products.html" class="text-gray-400 hover:text-white transition-colors">Products</a></li>
+<li><a href="order.html" class="text-gray-400 hover:text-white transition-colors">Custom Orders</a></li>
+<li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Our Products</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Birthday Cakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Wedding Cakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cupcakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Pastries</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Gluten-Free Options</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Opening Hours</h3>
+<ul class="space-y-2 text-gray-400">
+<li>Monday - Friday: 8:00 AM - 7:00 PM</li>
+<li>Saturday: 9:00 AM - 6:00 PM</li>
+<li>Sunday: 10:00 AM - 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 mb-4 md:mb-0">&copy; 2025 Sweet Delights. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<script id="main script">
+document.addEventListener('DOMContentLoaded', function() {
+    // Price calculation variables
+    const basePrices = {
+        '6inch': 25,
+        '8inch': 35,
+        '10inch': 45,
+        '12inch': 55
+    };
+    
+    const decorationPrices = {
+        'flowers': 15,
+        'sprinkles': 5,
+        'topper': 10,
+        'fruit': 8,
+        'drip': 12
+    };
+    
+    // Set minimum date for date picker (today + 2 days)
+    const dateInput = document.getElementById('date');
+    const today = new Date();
+    const minDate = new Date();
+    minDate.setDate(today.getDate() + 2);
+    dateInput.min = minDate.toISOString().split('T')[0];
+    
+    // Character counter for special instructions
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+    
+    messageTextarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        charCount.textContent = `${currentLength}/500 characters`;
+        
+        if (currentLength > 500) {
+            charCount.classList.add('text-red-500');
+        } else {
+            charCount.classList.remove('text-red-500');
+        }
+    });
+    
+    // Form elements that affect pricing
+    const pricingElements = [
+        document.getElementById('size'),
+        document.getElementById('flavor'),
+        document.getElementById('filling'),
+        document.getElementById('frosting')
+    ];
+    
+    // Checkbox decorations
+    const decorationCheckboxes = document.querySelectorAll('input[name="decorations[]"]');
+    
+    // Add event listeners to all relevant form elements
+    pricingElements.forEach(element => {
+        if (element) {
+            element.addEventListener('change', updateOrderSummary);
+        }
+    });
+    
+    decorationCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateOrderSummary);
+    });
+    
+    // Initial update
+    updateOrderSummary();
+    
+    // FAQ toggle functionality
+    function toggleFAQ(button) {
+        const faqItem = button.closest('div');
+        const content = faqItem.querySelector('div');
+        const icon = button.querySelector('i');
+        
+        content.classList.toggle('hidden');
+        icon.classList.toggle('ri-arrow-down-s-line');
+        icon.classList.toggle('ri-arrow-up-s-line');
+    }
+    
+    // Global function for FAQ toggling
+    window.toggleFAQ = toggleFAQ;
+    
+    // Update order summary function
+    function updateOrderSummary() {
+        const size = document.getElementById('size').value;
+        const decorations = Array.from(document.querySelectorAll('input[name="decorations[]"]:checked')).map(cb => cb.value);
+        
+        // Calculate base price based on size
+        let basePrice = 0;
+        let sizePrice = 0;
+        let decorationsPrice = 0;
+        
+        if (size && basePrices[size]) {
+            basePrice = basePrices[size];
+            sizePrice = basePrice;
+        }
+        
+        // Calculate decorations price
+        decorations.forEach(decoration => {
+            if (decorationPrices[decoration]) {
+                decorationsPrice += decorationPrices[decoration];
+            }
+        });
+        
+        // Calculate total
+        const totalPrice = basePrice + decorationsPrice;
+        
+        // Update the UI
+        document.getElementById('basePrice').textContent = `$${basePrice.toFixed(2)}`;
+        document.getElementById('sizePrice').textContent = `$${sizePrice.toFixed(2)}`;
+        document.getElementById('decorationsPrice').textContent = `$${decorationsPrice.toFixed(2)}`;
+        document.getElementById('totalPrice').textContent = `$${totalPrice.toFixed(2)}`;
+    }
+    
+    // Form submission handler
+    const orderForm = document.getElementById('customOrderForm');
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            const requiredFields = ['occasion', 'size', 'flavor', 'date', 'time'];
+            let isValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value) {
+                    field.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+            
+            if (isValid) {
+                // Here you would typically send the form data to the server
+                // For this example, we'll just show an alert
+                alert('Order submitted successfully! We will contact you to confirm details.');
+                // orderForm.reset();
+                // updateOrderSummary();
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        });
+    }
+    
+    // Remove error styling when user starts typing in required fields
+    requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function() {
+                if (this.value) {
+                    this.classList.remove('border-red-500');
+                }
+            });
+        }
+    });
+});
+</script>
+<script id="sign-in">
+ // Sign In Modal Functionality
+  const signInButton = document.getElementById('signInButton');
+  const signInModal = document.getElementById('signInModal');
+  const closeSignInModal = document.getElementById('closeSignInModal');
+  
+  if (signInButton && signInModal) {
+    signInButton.addEventListener('click', function() {
+      signInModal.classList.remove('hidden');
+    });
+  }
+  
+  // Mobile menu sign in button
+  const mobileSignInButton = document.querySelector('#mobile-menu button');
+  if (mobileSignInButton && signInModal) {
+    mobileSignInButton.addEventListener('click', function() {
+      signInModal.classList.remove('hidden');
+      document.getElementById('mobile-menu').classList.add('hidden');
+    });
+  }
+
+  if (closeSignInModal && signInModal) {
+    closeSignInModal.addEventListener('click', function() {
+      signInModal.classList.add('hidden');
+    });
+
+    // Close modal when clicking outside
+    signInModal.addEventListener('click', function(e) {
+      if (e.target === signInModal) {
+        signInModal.classList.add('hidden');
+      }
+    });
+  }
+
+  // Form submission
+  const signInForm = document.getElementById('signInForm');
+  if (signInForm) {
+    signInForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Here you would typically handle the sign in logic
+      alert('Sign in functionality would be implemented here');
+      signInModal.classList.add('hidden');
+    });
+  }
+</script>
+</body>
+</html>

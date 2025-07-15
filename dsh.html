@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Delights - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B6B',
+                        secondary: '#4ECDC4',
+                        accent: '#FFE66D',
+                        dark: '#292F36',
+                        light: '#F7FFF7'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '12px'
+                    },
+                    fontFamily: {
+                        'sans': ['"Inter"', 'sans-serif'],
+                        'display': ['"Poppins"', 'sans-serif'],
+                        'cursive': ['"Dancing Script"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            transform: translateX(5px);
+        }
+        .chart-container {
+            transition: all 0.5s ease;
+        }
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .inventory-bar {
+            height: 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-light min-h-screen flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-dark text-white fixed h-full hidden lg:block">
+        <div class="p-6">
+            <a href="#" class="text-3xl font-cursive text-white mb-8 block">Sweet Delight</a>
+            
+            <nav class="mt-10">
+                <div class="space-y-2">
+                    <a href="home.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-home-4-line mr-3"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="dashboard.html" class="flex items-center sidebar-item p-3 rounded-lg bg-primary bg-opacity-20 text-white">
+                        <i class="ri-dashboard-line mr-3"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="products.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-cake-3-line mr-3"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="order.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-shopping-bag-line mr-3"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="customers.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-user-line mr-3"></i>
+                        <span>Customers</span>
+                    </a>
+                    <a href="inventory.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-archive-line mr-3"></i>
+                        <span>Inventory</span>
+                    </a>
+                    <a href="reports.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-line-chart-line mr-3"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="settings.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                        <i class="ri-settings-3-line mr-3"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <div class="absolute bottom-0 w-full p-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                        <i class="ri-user-line text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Admin User</p>
+                        <p class="text-xs text-gray-400">Owner</p>
+                    </div>
+                </div>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="ri-logout-circle-r-line"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Header -->
+    <header class="lg:hidden bg-dark text-white w-full fixed z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#" class="text-2xl font-cursive text-white">Sweet Delight</a>
+            
+            <div class="flex items-center space-x-4">
+                <button id="mobile-menu-button" class="text-white">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden">
+        <div class="w-64 bg-dark text-white h-full relative">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-8">
+                    <a href="#" class="text-2xl font-cursive text-white">Sweet Delight</a>
+                    <button id="close-mobile-menu" class="text-white">
+                        <i class="ri-close-line ri-lg"></i>
+                    </button>
+                </div>
+                
+                <nav class="mt-6">
+                    <div class="space-y-2">
+                        <a href="home.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-home-4-line mr-3"></i>
+                            <span>Home</span>
+                        </a>
+                        <a href="dashboard.html" class="flex items-center sidebar-item p-3 rounded-lg bg-primary bg-opacity-20 text-white">
+                            <i class="ri-dashboard-line mr-3"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="products.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-cake-3-line mr-3"></i>
+                            <span>Products</span>
+                        </a>
+                        <a href="order.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-shopping-bag-line mr-3"></i>
+                            <span>Orders</span>
+                        </a>
+                        <a href="customers.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-user-line mr-3"></i>
+                            <span>Customers</span>
+                        </a>
+                        <a href="inventory.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-archive-line mr-3"></i>
+                            <span>Inventory</span>
+                        </a>
+                        <a href="reports.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-line-chart-line mr-3"></i>
+                            <span>Reports</span>
+                        </a>
+                        <a href="settings.html" class="flex items-center sidebar-item p-3 rounded-lg text-gray-300 hover:bg-primary hover:bg-opacity-20 hover:text-white">
+                            <i class="ri-settings-3-line mr-3"></i>
+                            <span>Settings</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+            
+            <div class="absolute bottom-0 w-full p-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                            <i class="ri-user-line text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Admin User</p>
+                            <p class="text-xs text-gray-400">Owner</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="ri-logout-circle-r-line"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 lg:ml-64">
+        <!-- Top Navigation -->
+        <div class="bg-white border-b border-gray-200 lg:sticky lg:top-0 z-40">
+            <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-xl font-display font-semibold text-dark">Dashboard</h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input type="text" placeholder="Search..." class="w-64 px-4 py-2 pl-10 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm bg-gray-50">
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="ri-search-line"></i>
+                        </div>
+                    </div>
+                    
+                    <button class="relative p-2 text-gray-600 hover:text-dark">
+                        <i class="ri-notification-3-line ri-lg"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+                    </button>
+                    
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 focus:outline-none">
+                            <div class="w-8 h-8 rounded-full bg-primary bg-opacity-20 flex items-center justify-center">
+                                <i class="ri-user-line text-primary"></i>
+                            </div>
+                            <span class="hidden md:inline font-medium text-sm">Admin</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="container mx-auto px-4 py-6">
+            <!-- Quick Actions -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-display font-semibold text-dark mb-2">Welcome back, Admin!</h2>
+                    <p class="text-gray-600">Here's what's happening with your bakery today.</p>
+                </div>
+                <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
+                    <button class="flex items-center bg-primary text-white px-4 py-2 rounded-button text-sm font-medium whitespace-nowrap hover:bg-opacity-90 transition-colors">
+                        <i class="ri-add-line mr-2"></i>
+                        Add New Product
+                    </button>
+                    <button class="flex items-center bg-white border border-gray-200 text-dark px-4 py-2 rounded-button text-sm font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">
+                        <i class="ri-cake-3-line mr-2"></i>
+                        Create Order
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="glass-card p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Total Revenue</h3>
+                        <div class="w-10 h-10 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                            <i class="ri-money-dollar-circle-line text-primary ri-lg"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-display font-semibold text-dark mb-1">$12,628</p>
+                    <div class="flex items-center">
+                        <span class="text-green-500 text-sm flex items-center">
+                            <i class="ri-arrow-up-s-line mr-1"></i> 8.2%
+                        </span>
+                        <span class="text-xs text-gray-500 ml-2">vs last month</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Total Orders</h3>
+                        <div class="w-10 h-10 rounded-full bg-secondary bg-opacity-10 flex items-center justify-center">
+                            <i class="ri-shopping-bag-line text-secondary ri-lg"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-display font-semibold text-dark mb-1">284</p>
+                    <div class="flex items-center">
+                        <span class="text-green-500 text-sm flex items-center">
+                            <i class="ri-arrow-up-s-line mr-1"></i> 4.3%
+                        </span>
+                        <span class="text-xs text-gray-500 ml-2">vs last month</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">New Customers</h3>
+                        <div class="w-10 h-10 rounded-full bg-accent bg-opacity-10 flex items-center justify-center">
+                            <i class="ri-user-add-line text-accent ri-lg"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-display font-semibold text-dark mb-1">48</p>
+                    <div class="flex items-center">
+                        <span class="text-green-500 text-sm flex items-center">
+                            <i class="ri-arrow-up-s-line mr-1"></i> 12.5%
+                        </span>
+                        <span class="text-xs text-gray-500 ml-2">vs last month</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Avg. Order Value</h3>
+                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                            <i class="ri-coin-line text-purple-500 ri-lg"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-display font-semibold text-dark mb-1">$44.47</p>
+                    <div class="flex items-center">
+                        <span class="text-red-500 text-sm flex items-center">
+                            <i class="ri-arrow-down-s-line mr-1"></i> 2.1%
+                        </span>
+                        <span class="text-xs text-gray-500 ml-2">vs last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Sales Chart -->
+                <div class="glass-card p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2 chart-container">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display font-medium text-dark">Sales Analytics</h3>
+                        <div class="flex items-center space-x-2">
+                            <button class="bg-primary text-white px-3 py-1 rounded-full text-xs font-medium">Weekly</button>
+                            <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-200">Monthly</button>
+                            <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-200">Yearly</button>
+                        </div>
+                    </div>
+                    <div id="sales-chart" class="w-full h-64"></div>
+                </div>
+                
+                <!-- Best Sellers -->
+                <div class="glass-card p-6 rounded-xl shadow-sm border border-gray-100 chart-container">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display font-medium text-dark">Best Sellers</h3>
+                        <button class="text-primary text-sm hover:underline">View All</button>
+                    </div>
+                    <div id="bestsellers-chart" class="w-full h-64"></div>
+                </div>
+            </div>
+
+            <!-- Recent Orders & Inventory -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Recent Orders -->
+                <div class="glass-card rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between p-6 border-b border-gray-100">
+                        <h3 class="font-display font-medium text-dark mb-3 md:mb-0">Recent Orders</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="bg-primary text-white px-3 py-1 rounded-full text-xs font-medium">All</button>
+                            <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-200">New</button>
+                            <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-200">Processing</button>
+                            <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-200">Completed</button>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <div class="p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <p class="font-medium text-dark">#ORD-7652</p>
+                                    <p class="text-sm text-gray-600">Emma Thompson</p>
+                                </div>
+                                <span class="status-badge bg-green-100 text-green-800">Completed</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-gray-600">Strawberry Bliss</p>
+                                <p class="font-medium text-dark">$38.99</p>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <p class="font-medium text-dark">#ORD-7651</p>
+                                    <p class="text-sm text-gray-600">Michael Rodriguez</p>
+                                </div>
+                                <span class="status-badge bg-yellow-100 text-yellow-800">Processing</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-gray-600">Chocolate Delight</p>
+                                <p class="font-medium text-dark">$42.99</p>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <p class="font-medium text-dark">#ORD-7650</p>
+                                    <p class="text-sm text-gray-600">Olivia Wilson</p>
+                                </div>
+                                <span class="status-badge bg-blue-100 text-blue-800">New</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-gray-600">Red Velvet Dream</p>
+                                <p class="font-medium text-dark">$45.99</p>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <p class="font-medium text-dark">#ORD-7649</p>
+                                    <p class="text-sm text-gray-600">James Anderson</p>
+                                </div>
+                                <span class="status-badge bg-yellow-100 text-yellow-800">Processing</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-gray-600">Custom Birthday Cake</p>
+                                <p class="font-medium text-dark">$65.50</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border-t border-gray-100 text-center">
+                        <a href="order.html" class="text-primary text-sm font-medium hover:underline">View all orders</a>
+                    </div>
+                </div>
+                
+                <!-- Inventory Status -->
+                <div class="glass-card rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between p-6 border-b border-gray-100">
+                        <h3 class="font-display font-medium text-dark mb-3 md:mb-0">Inventory Status</h3>
+                        <button class="text-primary text-sm hover:underline">View All</button>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="ri-cake-3-line text-primary ri-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-dark">Chocolate Delight</h4>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-sm text-gray-600">Stock: 18</span>
+                                    <span class="text-sm font-medium text-dark">$42.99</span>
+                                </div>
+                                <div class="w-full bg-gray-200 inventory-bar mt-2">
+                                    <div class="bg-green-500 inventory-bar" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="ri-cake-3-line text-primary ri-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-dark">Strawberry Bliss</h4>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-sm text-gray-600">Stock: 12</span>
+                                    <span class="text-sm font-medium text-dark">$38.99</span>
+                                </div>
+                                <div class="w-full bg-gray-200 inventory-bar mt-2">
+                                    <div class="bg-green-500 inventory-bar" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="ri-cake-3-line text-primary ri-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-dark">Red Velvet Dream</h4>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-sm text-gray-600">Stock: 5</span>
+                                    <span class="text-sm font-medium text-dark">$45.99</span>
+                                </div>
+                                <div class="w-full bg-gray-200 inventory-bar mt-2">
+                                    <div class="bg-yellow-500 inventory-bar" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="ri-cake-3-line text-primary ri-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-dark">Lemon Sunshine</h4>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-sm text-gray-600">Stock: 9</span>
+                                    <span class="text-sm font-medium text-dark">$39.99</span>
+                                </div>
+                                <div class="w-full bg-gray-200 inventory-bar mt-2">
+                                    <div class="bg-green-500 inventory-bar" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Messages -->
+            <div class="glass-card rounded-xl shadow-sm border border-gray-100 mb-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between p-6 border-b border-gray-100">
+                    <h3 class="font-display font-medium text-dark mb-3 md:mb-0">Customer Messages</h3>
+                    <button class="text-primary text-sm hover:underline">View All</button>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="font-medium text-blue-600">ET</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <h4 class="font-medium text-dark">Emma Thompson</h4>
+                                    <span class="ml-2 text-xs text-gray-500">2 hours ago</span>
+                                    <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">New</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">I wanted to check if my custom cake order for this weekend has been confirmed. I need it for a special birthday celebration.</p>
+                                <div class="flex space-x-3">
+                                    <button class="text-xs font-medium text-primary hover:underline">Reply</button>
+                                    <button class="text-xs font-medium text-gray-500 hover:underline">Mark as Read</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="font-medium text-green-600">MR</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <h4 class="font-medium text-dark">Michael Rodriguez</h4>
+                                    <span class="ml-2 text-xs text-gray-500">5 hours ago</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">Do you offer gluten-free options for your cakes? I have dietary restrictions but would love to try your products.</p>
+                                <div class="flex space-x-3">
+                                    <button class="text-xs font-medium text-primary hover:underline">Reply</button>
+                                    <button class="text-xs font-medium text-gray-500 hover:underline">Mark as Read</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="font-medium text-purple-600">OW</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <h4 class="font-medium text-dark">Olivia Wilson</h4>
+                                    <span class="ml-2 text-xs text-gray-500">Yesterday</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">I just wanted to say that the Red Velvet cake I ordered was absolutely delicious! Everyone at the party loved it. Will definitely order again.</p>
+                                <div class="flex space-x-3">
+                                    <button class="text-xs font-medium text-primary hover:underline">Reply</button>
+                                    <button class="text-xs font-medium text-gray-500 hover:underline">Mark as Read</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

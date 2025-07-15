@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Delights - Premium Cake Shop</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#ff6b6b',secondary:'#4ecdc4'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+<!-- Header -->
+ <header class="bg-white shadow-sm sticky top-0 z-50" id="home">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo and Mobile Menu Button -->
+      <div class="flex items-center">
+        <a href="#" class="text-3xl font-['Pacifico'] text-primary mr-4 md:mr-8">Sweet Delight</a>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-600">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-menu-line ri-lg"></i>
+          </div>
+        </button>
+      </div>
+
+      <!-- Main Navigation (Desktop) -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="home.html" class="text-gray-800 font-medium hover:text-primary transition-colors">Home</a>
+        <a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+        <a href="products.html" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+        <a href="order.html" class="text-gray-600 hover:text-primary transition-colors">Custom Orders</a>
+        <a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+        <a href="dashboard.html" class="text-gray-600 hover:text-primary transition-colors">Dashboard</a>
+      </nav>
+
+      <!-- Right Side Icons -->
+      <div class="flex items-center space-x-4">
+        <!-- Search (Mobile Trigger) -->
+        <button id="mobile-search-button" class="md:hidden text-gray-600 hover:text-primary transition-colors">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i class="ri-search-line ri-lg"></i>
+          </div>
+        </button>
+
+        <!-- Search (Desktop) -->
+        <div class="hidden md:block relative">
+          <input type="text" placeholder="Search products..."
+            class="w-40 lg:w-64 px-4 py-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+          <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="relative" id="shopping-cart">
+  <button class="text-gray-600 hover:text-primary transition-colors" id="cart-button">
+    <div class="w-8 h-8 flex items-center justify-center">
+      <i class="ri-shopping-cart-line ri-lg"></i>
+      <span id="cart-count"
+        class="absolute -top-1 -right-1 bg-primary text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
+    </div>
+  </button>
+
+  <!-- Cart Dropdown -->
+  <div id="cart-dropdown" class="hidden absolute right-0 mt-2 w-[32rem] bg-white rounded-lg shadow-lg z-50">
+    <div class="p-4">
+
+      <!-- Empty Cart -->
+      <div id="cart-empty" class="text-center py-8">
+        <div class="w-16 h-16 mx-auto mb-4 text-gray-400">
+          <i class="ri-shopping-cart-line ri-3x"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
+        <p class="text-gray-600 mb-4">Add some delicious items to your cart</p>
+        <a href="products.html">
+          <button
+            class="px-6 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+            Shop Now
+          </button>
+        </a>
+      </div>
+
+      <!-- Filled Cart -->
+      <div id="cart-items" class="hidden">
+        <div class="flex flex-col md:flex-row gap-4 max-h-80 overflow-y-auto">
+
+          <!-- Cart Section -->
+          <div class="border-r pr-2 w-full md:w-2/3">
+            <h4 class="font-semibold mb-2">Cart Items</h4>
+            <div id="cart-products-list" class="space-y-4"></div>
+          </div>
+
+          <!-- Filter Output Section -->
+          <div class="pl-2 w-full md:w-1/3">
+            <h4 class="font-semibold mb-2">Selected Filters</h4>
+            <div id="cart-filters-output" class="text-sm space-y-1 text-gray-700"></div>
+          </div>
+        </div>
+
+        <!-- Subtotal & Button -->
+        <div class="border-t border-gray-200 mt-4 pt-4">
+          <div class="flex justify-between text-gray-900 font-semibold mb-4">
+            <span>Subtotal:</span>
+            <span id="cart-subtotal">$0.00</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button
+              class="w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 !rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap"
+              onclick="closeCart()">Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+        <!-- Sign In (Desktop) -->
+        <button id="signInButton"
+          class="hidden md:inline-flex items-center px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+          <span>Login In</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="container mx-auto px-4 py-3">
+        <nav class="flex flex-col space-y-4">
+          <a href="#home" class="text-gray-800 font-medium hover:text-primary transition-colors">Home</a>
+          <a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+          <a href="products.html" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+          <a href="order.html" class="text-gray-600 hover:text-primary transition-colors">Custom Orders</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          <a href="dashboard.html" class="text-gray-600 hover:text-primary transition-colors">Dashboard</a>
+          <button
+            class="w-full text-left px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">
+            Login In
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Mobile Search -->
+    <div id="mobile-search" class="hidden md:hidden bg-white border-t border-gray-200 px-4 py-3">
+      <div class="relative">
+        <input type="text" placeholder="Search products..."
+          class="w-full px-4 py-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <i class="ri-search-line"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign In Modal -->
+    <div id="signInModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+      <div class="bg-white rounded-lg w-full max-w-md p-6 relative mx-4">
+        <button id="closeSignInModal" class="absolute right-4 top-4 text-gray-500 hover:text-gray-700">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-close-line ri-lg"></i>
+          </div>
+        </button>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Login In</h2>
+        <form id="signInForm">
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+            <input type="email" id="signInEmail" placeholder="Enter your Email"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              required>
+          </div>
+          <div class="mb-6">
+            <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+            <input type="password" id="signInPassword" placeholder="Enter your Password"
+              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              required>
+          </div>
+          <button type="submit"
+            class="w-full px-6 py-3 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap mb-4">Login
+            In</button>
+        </form>
+      </div>
+    </div>
+  </header>
+<!-- Hero Section with Slider -->
+<div class="relative overflow-hidden">
+<div class="slider-container relative h-[600px] overflow-hidden">
+<div class="slides absolute w-full h-full flex transition-transform duration-500">
+<div class="slide min-w-full h-full relative">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/Slider-1.jpg')"></div>
+<div class="absolute inset-0 bg-black bg-opacity-40"></div>
+<div class="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+<div class="max-w-2xl">
+<h1 class="text-5xl font-bold text-white mb-6">Crafting Sweet Moments</h1>
+<p class="text-xl text-white mb-8">Experience the artistry of our handcrafted cakes and pastries, made with love and premium ingredients.</p>
+<div class="flex space-x-4">
+  <a href="order.html" class="bg-primary text-white px-8 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200 inline-block">Order Now</a>
+  <a href="products.html"class ="bg-white text-gray-800 px-8 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200 inline-block">Our Menu</a>
+</div>
+</div>
+</div>
+</div>
+<div class="slide min-w-full h-full relative">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/slider-2.jpg')"></div>
+<div class="absolute inset-0 bg-black bg-opacity-40"></div>
+<div class="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+<div class="max-w-2xl">
+<h1 class="text-5xl font-bold text-white mb-6">Custom Creations</h1>
+<p class="text-xl text-white mb-8">Let us bring your dream cake to life. Perfect for weddings, birthdays, and special celebrations.</p>
+<div class="flex space-x-4">
+<a href="order.html" class="bg-primary text-white px-8 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200 inline-block">Custom Order</a>
+<a href="about.html" class="bg-white text-gray-800 px-8 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200 inline-block">Learn More</a>
+</div>
+</div>
+</div>
+</div>
+<div class="slide min-w-full h-full relative">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/slider-3.jpg')"></div>
+<div class="absolute inset-0 bg-black bg-opacity-40"></div>
+<div class="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+<div class="max-w-2xl">
+<h1 class="text-5xl font-bold text-white mb-6">Artisanal Delights</h1>
+<p class="text-xl text-white mb-8">Discover our selection of freshly baked pastries, macarons, and seasonal specialties.</p>
+<div class="flex space-x-4">
+  <a href="products.html" class="bg-primary text-white px-8 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200 inline-block">View Collection</a>
+  <a href="contact.html" class="bg-white text-gray-800 px-8 py-3 rounded-button text-sm font-medium hover:bg-opacity-90 transition-colors duration-200 inline-block">Visit Us</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+<button class="w-2 h-2 rounded-full bg-white bg-opacity-50 slider-dot"></button>
+<button class="w-2 h-2 rounded-full bg-white bg-opacity-50 slider-dot"></button>
+<button class="w-2 h-2 rounded-full bg-white bg-opacity-50 slider-dot"></button>
+</div>
+<button class="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 flex items-center justify-center text-gray-800 z-10" id="prevSlide">
+<i class="ri-arrow-left-s-line ri-lg"></i>
+</button>
+<button class="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 flex items-center justify-center text-gray-800 z-10" id="nextSlide">
+<i class="ri-arrow-right-s-line ri-lg"></i>
+</button>
+</div>
+</div>
+<!-- Featured Products -->
+<section class="py-16 bg-white" id="products">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Our Signature Cakes</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Explore our most popular creations that have delighted customers for years. Each cake is crafted with premium ingredients and expert care.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Product 1 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+<div class="h-64 overflow-hidden">
+<img src="images/Chocolate-delight.jpg" alt="Chocolate Delight Cake" class="w-full h-full object-cover object-top">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold text-gray-900 mb-2">Chocolate Delight</h3>
+<p class="text-gray-600 mb-4">Rich chocolate layers with ganache and fresh berries.</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-semibold">$42.99</span>
+<button class="px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">Add to Cart</button>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+<div class="h-64 overflow-hidden">
+<img src="images/Strawberry-bliss.jpg" alt="Strawberry Bliss Cake" class="w-full h-full object-cover object-top">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold text-gray-900 mb-2">Strawberry Bliss</h3>
+<p class="text-gray-600 mb-4">Vanilla sponge with fresh strawberries and cream.</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-semibold">$38.99</span>
+<button class="px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">Add to Cart</button>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+<div class="h-64 overflow-hidden">
+<img src="images/Red-velvet.jpg" alt="Red Velvet Dream Cake" class="w-full h-full object-cover object-top">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold text-gray-900 mb-2">Red Velvet Dream</h3>
+<p class="text-gray-600 mb-4">Classic red velvet with cream cheese frosting.</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-semibold">$45.99</span>
+<button class="px-4 py-2 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">Add to Cart</button>
+</div>
+</div>
+</div>
+</div>
+<div class="text-center mt-12">
+<a href="products.html" class="inline-flex items-center justify-center px-6 py-3 bg-white border border-primary text-primary !rounded-button hover:bg-primary hover:text-white transition-colors whitespace-nowrap">
+<span>View All Products</span>
+<div class="w-5 h-5 ml-2 flex items-center justify-center">
+<i class="ri-arrow-right-line"></i>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- News & Updates with Company Info -->
+<section class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- News Ticker -->
+<div class="md:col-span-2 bg-white rounded-lg shadow-md p-6">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Latest News & Updates</h2>
+<div class="news-ticker border border-gray-200 rounded-lg p-4 mb-4">
+<div class="news-ticker-content">
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">New Summer Collection Launched!</h3>
+<p class="text-gray-600">May 24, 2025</p>
+<p class="text-gray-700 mt-2">Beat the heat with our refreshing summer-inspired cakes featuring tropical flavors and vibrant designs. Limited time only!</p>
+</div>
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Introducing Gluten-Free Options</h3>
+<p class="text-gray-600">May 15, 2025</p>
+<p class="text-gray-700 mt-2">We're excited to announce our new range of gluten-free cakes, made with premium alternative flours without compromising on taste.</p>
+</div>
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Wedding Season Special Discount</h3>
+<p class="text-gray-600">May 10, 2025</p>
+<p class="text-gray-700 mt-2">Planning a summer wedding? Get 15% off on all wedding cake orders placed before June 30th. Book your consultation today!</p>
+</div>
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Cake Decorating Workshop</h3>
+<p class="text-gray-600">May 5, 2025</p>
+<p class="text-gray-700 mt-2">Join our master pastry chef for a hands-on cake decorating workshop on June 12th. Limited spots available, register now!</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Company Info -->
+<div class="bg-white rounded-lg shadow-md p-6">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">About Sweet Delights</h2>
+<div class="mb-6">
+<img src="https://readdy.ai/api/search-image?query=A%20team%20of%20professional%20bakers%20working%20in%20a%20modern%20bakery%20kitchen%2C%20preparing%20cakes%2C%20friendly%20atmosphere%2C%20professional%20food%20business%2C%20clean%20environment%2C%20white%20uniforms%2C%20high-end%20bakery&width=400&height=250&seq=5&orientation=landscape" alt="Our Bakery" class="w-full h-48 object-cover object-top rounded-lg mb-4">
+<p class="text-gray-700">Founded in 2010, Sweet Delights has been crafting premium cakes for all occasions. Our team of expert bakers combines traditional recipes with innovative techniques to create unforgettable desserts.</p>
+</div>
+<div class="mb-6">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Opening Hours</h3>
+<ul class="text-gray-700 space-y-1">
+<li>Monday - Friday: 8:00 AM - 7:00 PM</li>
+<li>Saturday: 9:00 AM - 6:00 PM</li>
+<li>Sunday: 10:00 AM - 4:00 PM</li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Follow Us</h3>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-600 hover:text-primary transition-colors">
+<div class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-facebook-fill ri-lg"></i>
+</div>
+</a>
+<a href="#" class="text-gray-600 hover:text-primary transition-colors">
+<div class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-instagram-line ri-lg"></i>
+</div>
+</a>
+<a href="#" class="text-gray-600 hover:text-primary transition-colors">
+<div class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-twitter-x-line ri-lg"></i>
+</div>
+</a>
+<a href="#" class="text-gray-600 hover:text-primary transition-colors">
+<div class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-pinterest-line ri-lg"></i>
+</div>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Special Occasions -->
+<section class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Cakes for Every Occasion</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">From birthdays to weddings, we create custom cakes that perfectly match your special moments.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Occasion 1 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden group">
+<div class="h-48 overflow-hidden relative">
+<img src="images/Birthday-cakes.jpg" alt="Birthday Cakes" class="w-full h-full object-cover object-top transition-transform group-hover:scale-110">
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold text-gray-900 mb-1">Birthday Cakes</h3>
+<p class="text-gray-600 text-sm">Make your celebration unforgettable</p>
+</div>
+</div>
+<!-- Occasion 2 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden group">
+<div class="h-48 overflow-hidden relative">
+<img src="images/Weeding-cakes.jpg" alt="Wedding Cakes" class="w-full h-full object-cover object-top transition-transform group-hover:scale-110">
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold text-gray-900 mb-1">Wedding Cakes</h3>
+<p class="text-gray-600 text-sm">Elegant designs for your special day</p>
+</div>
+</div>
+<!-- Occasion 3 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden group">
+<div class="h-48 overflow-hidden relative">
+<img src="images/Anniversary-cakes.jpg" alt="Anniversary Cakes" class="w-full h-full object-cover object-top transition-transform group-hover:scale-110">
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold text-gray-900 mb-1">Anniversary Cakes</h3>
+<p class="text-gray-600 text-sm">Celebrate years of love and happiness</p>
+</div>
+</div>
+<!-- Occasion 4 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden group">
+<div class="h-48 overflow-hidden relative">
+<img src="images/Custom-cakes.jpg" alt="Custom Cakes" class="w-full h-full object-cover object-top transition-transform group-hover:scale-110">
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold text-gray-900 mb-1">Custom Cakes</h3>
+<p class="text-gray-600 text-sm">Bring your unique vision to life</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Video Section -->
+<!-- <section class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Our Cake Making Process</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Watch how our expert bakers create magic in the kitchen, from selecting the finest ingredients to the final decoration.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<video controls class="w-full h-80 object-cover" poster="images/Poster-1.jpg">
+<source src="#" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<div class="p-6">
+<h3 class="text-xl font-bold text-gray-900 mb-2">The Art of Cake Decoration</h3>
+<p class="text-gray-600">Learn the techniques our pastry chefs use to create stunning cake designs that are as beautiful as they are delicious.</p>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<video controls class="w-full h-80 object-cover" poster="images/poster-2.jpg">
+<source src="#" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<div class="p-6">
+<h3 class="text-xl font-bold text-gray-900 mb-2">From Ingredients to Masterpiece</h3>
+<p class="text-gray-600">Discover our secret recipes and premium ingredients that make our cakes stand out from the rest.</p>
+</div>
+</div>
+</div>
+</div>
+</section> -->
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Cake Making Process</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Watch how our expert bakers create magic in the kitchen, from selecting the finest ingredients to the final decoration.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Video 1 -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
+        <video id="video1" class="w-full h-80 object-cover" poster="images/Poster-1.jpg">
+          <source src="https://storage.googleapis.com/coverr-user-generations-prod/veo-videos/task-kTmUg0WlNd/17784404490259762321/sample_0.mp4?download=true" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+        <div id="overlay1" class="video-overlay">
+          <button class="play-button">
+            <svg class="play-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+            </svg>
+          </button>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">The Art of Cake Decoration</h3>
+          <p class="text-gray-600">Learn the techniques our pastry chefs use to create stunning cake designs.</p>
+        </div>
+      </div>
+      
+      <!-- Video 2 -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
+        <video id="video2" class="w-full h-80 object-cover" poster="images/poster-2.jpg">
+          <source src="https://storage.googleapis.com/coverr-user-generations-prod/veo-videos/task-q28DyT0Eb2/18002464490505102385/sample_0.mp4?download=true" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+        <div id="overlay2" class="video-overlay">
+          <button class="play-button">
+            <svg class="play-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+            </svg>
+          </button>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">From Ingredients to Masterpiece</h3>
+          <p class="text-gray-600">Discover our secret recipes and premium ingredients.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Testimonials -->
+<section class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Don't just take our word for it. Here's what our happy customers have to say about our cakes.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-white rounded-lg shadow-md p-6">
+<div class="flex items-center mb-4">
+<div class="text-primary">
+<div class="flex">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+</div>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"The wedding cake exceeded all our expectations! Not only was it stunningly beautiful, but it tasted amazing too. Our guests couldn't stop talking about it. Thank you for making our special day even more memorable!"</p>
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+<img src="images/image-1.jpg" alt="Emily Richardson" class="w-full h-full object-cover">
+</div>
+<div>
+<h4 class="font-semibold text-gray-900">Sana</h4>
+<p class="text-gray-600 text-sm">Wedding Client</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white rounded-lg shadow-md p-6">
+<div class="flex items-center mb-4">
+<div class="text-primary">
+<div class="flex">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+</div>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"I ordered a custom birthday cake for my son's superhero-themed party, and it was absolutely perfect! The attention to detail was incredible, and the cake was delicious. My son was thrilled, and all the kids loved it!"</p>
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+<img src="images/image-2.jpg" alt="Michael Thompson" class="w-full h-full object-cover">
+</div>
+<div>
+<h4 class="font-semibold text-gray-900">Ali</h4>
+<p class="text-gray-600 text-sm">Birthday Party Client</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white rounded-lg shadow-md p-6">
+<div class="flex items-center mb-4">
+<div class="text-primary">
+<div class="flex">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-star-fill"></i>
+</div>
+</div>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"As a corporate event planner, I've worked with many bakeries, but Sweet Delights stands out for their professionalism and quality. They delivered 200 perfectly branded cupcakes for our company anniversary, right on time. Highly recommended!"</p>
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+<img src="images/image-3.jpg" alt="Sophia Williams" class="w-full h-full object-cover">
+</div>
+<div>
+<h4 class="font-semibold text-gray-900">Ayesha</h4>
+<p class="text-gray-600 text-sm">Corporate Client</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter & Contact -->
+<section class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<!-- Newsletter -->
+<div class="bg-primary bg-opacity-10 rounded-lg p-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-4">Subscribe to Our Newsletter</h2>
+<p class="text-gray-700 mb-6">Stay updated with our latest cake designs, seasonal offers, and exclusive discounts.</p>
+<form class="flex flex-col sm:flex-row gap-4">
+<input type="email" placeholder="Your email address" class="flex-1 px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+<button type="submit" class="px-6 py-3 bg-primary text-white !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">Subscribe</button>
+</form>
+</div>
+<!-- Quick Contact -->
+<div class="bg-gray-50 rounded-lg p-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+<p class="text-gray-700 mb-6">Have questions or need assistance? Contact us directly.</p>
+<div class="space-y-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 text-primary">
+<i class="ri-map-pin-line ri-lg"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900">Address</h4>
+<p class="text-gray-600">Street 5,West Canal Road, Faisalabad.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 text-primary">
+<i class="ri-phone-line ri-lg"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900">Phone</h4>
+<p class="text-gray-600">+92 3257014365</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 text-primary">
+<i class="ri-mail-line ri-lg"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900">Email</h4>
+<p class="text-gray-600">info@sweetdelights.com</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+<div>
+<a href="#" class="text-3xl font-['Pacifico'] text-white mb-4 block">Sweet Delight</a>
+<p class="text-gray-400 mb-6">Crafting delicious memories since 2010. Premium cakes for all your special occasions.</p>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-facebook-fill"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-instagram-line"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-twitter-x-line"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-pinterest-line"></i>
+</div>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+<ul class="space-y-2">
+<li><a href="home.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+<li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+<li><a href="products.html" class="text-gray-400 hover:text-white transition-colors">Products</a></li>
+<li><a href="order.html" class="text-gray-400 hover:text-white transition-colors">Custom Orders</a></li>
+<li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Our Products</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Birthday Cakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Wedding Cakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cupcakes</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Pastries</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Gluten-Free Options</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Opening Hours</h3>
+<ul class="space-y-2 text-gray-400">
+<li>Monday - Friday: 8:00 AM - 7:00 PM</li>
+<li>Saturday: 9:00 AM - 6:00 PM</li>
+<li>Sunday: 10:00 AM - 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 mb-4 md:mb-0">&copy; 2025 Sweet Delights. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<script id="header">
+document.addEventListener('DOMContentLoaded', function() {
+  // Mobile Menu Toggle
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', function() {
+      mobileMenu.classList.toggle('hidden');
+      // Close search if open
+      document.getElementById('mobile-search').classList.add('hidden');
+    });
+  }
+
+  // Mobile Search Toggle
+  const mobileSearchButton = document.getElementById('mobile-search-button');
+  const mobileSearch = document.getElementById('mobile-search');
+  
+  if (mobileSearchButton && mobileSearch) {
+    mobileSearchButton.addEventListener('click', function() {
+      mobileSearch.classList.toggle('hidden');
+      // Close menu if open
+      document.getElementById('mobile-menu').classList.add('hidden');
+    });
+  }
+
+  // Shopping Cart Functionality
+  const cartButton = document.getElementById('cart-button');
+  const cartDropdown = document.getElementById('cart-dropdown');
+  
+  if (cartButton && cartDropdown) {
+    cartButton.addEventListener('click', function(e) {
+      e.stopPropagation();
+      cartDropdown.classList.toggle('hidden');
+    });
+
+    // Close cart when clicking outside
+    document.addEventListener('click', function() {
+      cartDropdown.classList.add('hidden');
+    });
+
+    // Prevent cart from closing when clicking inside it
+    cartDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+
+  // Sign In Modal Functionality
+  const signInButton = document.getElementById('signInButton');
+  const signInModal = document.getElementById('signInModal');
+  const closeSignInModal = document.getElementById('closeSignInModal');
+  
+  if (signInButton && signInModal) {
+    signInButton.addEventListener('click', function() {
+      signInModal.classList.remove('hidden');
+    });
+  }
+  
+  // Mobile menu sign in button
+  const mobileSignInButton = document.querySelector('#mobile-menu button');
+  if (mobileSignInButton && signInModal) {
+    mobileSignInButton.addEventListener('click', function() {
+      signInModal.classList.remove('hidden');
+      document.getElementById('mobile-menu').classList.add('hidden');
+    });
+  }
+
+  if (closeSignInModal && signInModal) {
+    closeSignInModal.addEventListener('click', function() {
+      signInModal.classList.add('hidden');
+    });
+
+    // Close modal when clicking outside
+    signInModal.addEventListener('click', function(e) {
+      if (e.target === signInModal) {
+        signInModal.classList.add('hidden');
+      }
+    });
+  }
+
+  // Form submission
+  const signInForm = document.getElementById('signInForm');
+  if (signInForm) {
+    signInForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Here you would typically handle the sign in logic
+      alert('Sign in functionality would be implemented here');
+      signInModal.classList.add('hidden');
+    });
+  }
+
+  // Initialize cart display
+  const cartCount = document.getElementById('cart-count');
+  if (cartCount) {
+    // Simple cart count initialization
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cartCount.textContent = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+  }
+
+  // Close cart function (used in HTML onclick)
+  window.closeCart = function() {
+    const cartDropdown = document.getElementById('cart-dropdown');
+    if (cartDropdown) {
+      cartDropdown.classList.add('hidden');
+    }
+  };
+});
+</script>
+<script id="slider-script">
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.slides');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const prevBtn = document.getElementById('prevSlide');
+    const nextBtn = document.getElementById('nextSlide');
+    
+    let currentIndex = 0;
+    const slideCount = slides.length;
+    
+    // Initialize slider
+    function updateSlider() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Update dots
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('bg-opacity-100', index === currentIndex);
+            dot.classList.toggle('bg-opacity-50', index !== currentIndex);
+        });
+    }
+    
+    // Next slide
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slideCount;
+        updateSlider();
+    }
+    
+    // Previous slide
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+        updateSlider();
+    }
+    
+    // Event listeners
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+    
+    // Dot navigation
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentIndex = index;
+            updateSlider();
+        });
+    });
+    
+    // Auto slide
+    setInterval(nextSlide, 2000);
+    
+    // Initialize
+    updateSlider();
+});
+</script>
+<script id="news-ticker-script">
+document.addEventListener('DOMContentLoaded', function() {
+    const newsContent = document.querySelector('.news-ticker-content');
+    const newsItems = document.querySelectorAll('.news-ticker-content > div');
+    const buttonsContainer = document.querySelector('.news-ticker').nextElementSibling;
+    const prevBtn = buttonsContainer.querySelector('button:first-child');
+    const nextBtn = buttonsContainer.querySelector('button:last-child');
+    
+    let currentIndex = 0;
+    const visibleItems = 1;
+    
+    function updateTicker() {
+        const itemWidth = newsItems[0].offsetWidth;
+        const translateX = -currentIndex * itemWidth;
+        newsContent.style.transform = `translateX(${translateX}px)`;
+        
+        // Disable buttons at boundaries
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex >= newsItems.length - visibleItems;
+    }
+    
+    // Next button click
+    nextBtn.addEventListener('click', function() {
+        if (currentIndex < newsItems.length - visibleItems) {
+            currentIndex++;
+            updateTicker();
+        }
+    });
+    
+    // Previous button click
+    prevBtn.addEventListener('click', function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateTicker();
+        }
+    });
+    
+    // Initialize
+    updateTicker();
+    
+    // Handle window resize
+    window.addEventListener('resize', updateTicker);
+});
+</script>
+<!-- <script id="video-script">
+document.addEventListener('DOMContentLoaded', function() {
+const video = document.getElementById('storyVideo');
+const overlay = document.getElementById('videoOverlay');
+let isPlaying = false;
+
+overlay.addEventListener('click', function() {
+if (isPlaying) {
+video.pause();
+overlay.style.display = 'flex';
+} else {
+video.play();
+overlay.style.display = 'none';
+}
+isPlaying = !isPlaying;
+});
+
+video.addEventListener('ended', function() {
+isPlaying = false;
+overlay.style.display = 'flex';
+});
+
+video.addEventListener('pause', function() {
+isPlaying = false;
+overlay.style.display = 'flex';
+});
+});
+</script> -->
+<script id="video-script">
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize both videos
+  initVideoPlayer('video1', 'overlay1');
+  initVideoPlayer('video2', 'overlay2');
+  
+  function initVideoPlayer(videoId, overlayId) {
+    const video = document.getElementById(videoId);
+    const overlay = document.getElementById(overlayId);
+    
+    if (!video || !overlay) return;
+    
+    // Click overlay to play/pause
+    overlay.addEventListener('click', function() {
+      if (video.paused) {
+        video.play();
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 300);
+      } else {
+        video.pause();
+        overlay.style.display = 'flex';
+        overlay.style.opacity = '1';
+      }
+    });
+    
+    // Show overlay when video ends
+    video.addEventListener('ended', function() {
+      overlay.style.display = 'flex';
+      overlay.style.opacity = '1';
+    });
+    
+    // Show overlay when video is paused
+    video.addEventListener('pause', function() {
+      if (!video.ended) {
+        overlay.style.display = 'flex';
+        overlay.style.opacity = '1';
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
